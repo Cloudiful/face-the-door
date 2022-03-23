@@ -1,19 +1,27 @@
-import ui
-from passwd import input_password
-from face import face_recognition
+import face
+import passwd
+import face
 from unlock import unlock_door
-from ui import *
-
+import ui
 
 if __name__ == "__main__":
 
-    clear_screen()
+    ui.clear_screen()
 
-    result = face_recognition()
+    if face.capture() == 'pwd':
+        password = passwd.input_passwd()
+        print(password)
+        if password == "123456":
+            unlock_door()
+        else:
+            pass
 
-    if result == "success":
-        unlock_door()
-    elif result == "error":
-        ui.show_title("FAILED TO UNLOCK!")
+    # result = face.recognition()
+    #
+    # if result == "success":
+    #     unlock_door()
+    # elif result == "error":
+    #     ui.show_title("FAILED TO UNLOCK!")
+    #     ui.draw_screen()
 
-
+    a = input("按回车键退出程序...")

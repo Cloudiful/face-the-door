@@ -1,17 +1,18 @@
 # coding=utf8
 import base64
-import socket
+
+import pygame.event
+import requests
 import os.path
 import numpy as np
 import cv2.cv2 as cv
 from aip import AipFace
 from time import sleep
-
-# 开始检测人脸，每10帧检测一次，检测到5张人脸后返回主程序，并保存人脸图像至image文件夹下
 import data
 import ui
 
 
+# 开始检测人脸，每10帧检测一次，检测到5张人脸后返回主程序，并保存人脸图像至image文件夹下
 def capture():
     cap = cv.VideoCapture(0)
     cap.set(cv.CAP_PROP_FRAME_WIDTH, 320)  # set Width
@@ -19,7 +20,12 @@ def capture():
     cap.set(cv.CAP_PROP_FPS, 25)
 
     # print("开始检测人脸")
-    ui.show_title("开始检测人脸")
+    ui.clear_screen()
+    ui.Title("开始检测人脸")
+    pwdButton = ui.Button(data.WIDTH // 2, data.HEIGHT // 6 * 5, "long")
+    pwdButton.draw()
+    ui.Text('使用密码解锁', data.WIDTH // 2, data.HEIGHT // 6 * 5, 48).draw()
+    ui.draw_screen()
     frame = 0
     detected = 0
     faceCascade = cv.CascadeClassifier('/usr/local/lib/python3.9/dist-packages/cv2/data'
@@ -43,12 +49,14 @@ def capture():
                 roi_gray = gray[y:y + h, x:x + w]
                 roi_color = img[y:y + h, x:x + w]
                 detected += 1
-                # print("已捕获" + str(detected) + "张人脸图像")
-                ui.show_title("已捕获" + str(detected) + "张人脸图像")
+                print("已捕获" + str(detected) + "张人脸图像")
+                ui.Title("已捕获" + str(detected) + "张人脸图像")
+                ui.draw_screen()
 
         # cv.imshow('video', img)
         data.cameraFeed = img  # send img into cameraFeed for pygame
-        ui.show_camera_feed()
+        ui.CameraFeed().show_camera_feed()
+        ui.draw_screen()
 
         k = cv.waitKey(30) & 0xff
 
@@ -58,10 +66,19 @@ def capture():
         if detected >= 5 or k == 27:  # 捕获到五张人脸图片或按ESC键时退出
             ui.clear_screen()
             break
+
+        for event in pygame.event.get():
+            # when mouse moved
+            if event.type == pygame.MOUSEMOTION:
+                pos = pygame.mouse.get_pos()
+                if pwdButton.detected(pos):
+                    return "pwd"
+
     cap.release()
     cv.destroyAllWindows()
-    # print("人脸检测完毕，已保存5张图片待处理。")
-    ui.show_title("人脸检测完毕，已保存5张图片待处理。")
+    print("人脸检测完毕，已保存5张图片待处理。")
+    ui.Title("人脸检测完毕，已保存5张图片待处理。")
+    ui.draw_screen()
 
 
 # 调用百度云API，对之前保存的人脸图像进行比对，并输出结果
@@ -106,48 +123,46 @@ def baidu_api():
         if name[i] != name_result or score[i] <= 70:
             return "error"
 
-    # print("认证成功，欢迎：" + name_result)
-    ui.show_title("认证成功，欢迎：" + name_result)
+    print("认证成功，欢迎：" + name_result)
+    ui.Title("认证成功，欢迎：" + name_result)
+    ui.draw_screen()
     return name_result
 
 
+# test if device is online
 def test_network():
-    s = socket.socket()
-    s.settimeout(3)
     try:
-        status = s.connect_ex(("www.baidu.com", 443))
-        if status == 0:
-            s.close()
-            return True
-        else:
-            return False
-    except Exception as e:
+        html = requests.get("https://www.baidu.com", timeout=1)
+    except:
         return False
+    return True
 
 
-def face_recognition():
+def recognition():
     fail = 0
 
     # 如果设备已联网，则使用百度API进行人脸比对
     if test_network():
         print("已联网，将使用百度API。")
-        ui.show_title("已联网，将使用百度API。")
         while fail < 3:
             capture()  # 调用Opencv进行人脸检测
             result = baidu_api()  # 调用百度API进行人脸比对与活体检测
             if result != "error":
                 return "success"
-                break
             else:
                 print("认证失败，请重新尝试。")
-                ui.show_title("认证失败，请重新尝试。")
+                ui.Title("认证失败，请重新尝试。")
+                ui.draw_screen()
                 fail += 1
         if fail >= 3:
             print("尝试次数过多，系统暂时锁定......")
-            ui.show_title("尝试次数过多，系统暂时锁定......")
+            ui.Title("尝试次数过多，系统暂时锁定......")
+            ui.draw_screen()
             return "error"
 
     # 设备脱机
     else:
         print("当前未连接互联网......")
-        ui.show_title("当前未连接互联网......")
+        ui.Title("当前未连接互联网......")
+        ui.draw_screen()
+        return "error"
