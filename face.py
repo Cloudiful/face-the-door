@@ -3,7 +3,7 @@ import base64
 import requests
 import os.path
 import numpy as np
-import cv2.cv2 as cv
+import cv2 as cv
 from aip import AipFace
 from time import sleep
 import data
@@ -42,19 +42,16 @@ def capture():
                 detected += 1
                 print("已捕获" + str(detected) + "张人脸图像")
 
-        cv.imshow('video', img)
+        # cv.imshow('video', img)
         data.cameraFeed = img  # send img into cameraFeed for pygame
-
-        k = cv.waitKey(30) & 0xff
 
         if detected != 0:  # 捕获到人脸后将其保存至images文件夹中
             cv.imwrite(os.path.join('./images/', 'detected face ' + str(detected) + '.jpg'), img)
 
-        if detected >= 5 or k == 27:  # 捕获到五张人脸图片或按ESC键时退出
+        if detected >= 5:  # 捕获到五张人脸图片或按ESC键时退出
             break
 
     cap.release()
-    cv.destroyAllWindows()
     print("人脸检测完毕，已保存5张图片待处理。")
 
 
