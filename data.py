@@ -2,8 +2,6 @@ import pygame
 
 # monitor width and height
 WIDTH, HEIGHT = 800, 480
-BGCOLOR = (66,66,66)
-FONTCOLOR = (33,33,33)
 
 FPS = 50
 
@@ -15,17 +13,17 @@ cameraFeedHeight = 480
 cameraFeedX = 0
 cameraFeedY = 0
 
-# string list for text file
-TXT = []
-FONTSIZE = 32
+# # string list for text file
+# TXT = []
+# FONTSIZE = 32
+#
+# formerFontX = 0
+# formerFontY = 0
+# formerFontWidth = 0
+# formerFontHeight = 0
 
-formerFontX = 0
-formerFontY = 0
-formerFontWidth = 0
-formerFontHeight = 0
-
-buttonWidth = 64
-buttonHeight = 24
+# buttonWidth = 64
+# buttonHeight = 24
 
 # header when TCP communicating, contains the length of message
 HEADER = 64

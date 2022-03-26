@@ -1,13 +1,11 @@
 import pygame.mouse
 import data
-import ui
 
 buttons = []
 pressed = -1
 
 
 def draw_numpad():
-    ui.clear_screen()
     numbers = []
     strs = []
     bS = 100  # button size
