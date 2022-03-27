@@ -1,6 +1,5 @@
 from PySide2.QtWidgets import QApplication, QMainWindow, QDialog
 
-from face import capture
 from indexui import Ui_MainWindow
 from pwdui import Ui_Dialog as Ui_PwdWindow
 from unlockui import Ui_Dialog as Ui_UnlockWindow
