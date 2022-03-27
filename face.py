@@ -9,7 +9,7 @@ from time import sleep
 import data
 
 
-# 开始检测人脸，每10帧检测一次，检测到5张人脸后返回主程序，并保存人脸图像至image文件夹下
+# 开始检测人脸，每10帧检测一次，检测到5张人脸后返回主程序，并保存人脸图像至image文件夹下.
 def capture():
     cap = cv.VideoCapture(0)
     cap.set(cv.CAP_PROP_FRAME_WIDTH, 320)  # set Width

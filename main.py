@@ -10,4 +10,4 @@ if __name__ == "__main__":
     tGUI.start()
     tFace.start()
 
-    input('a')
+    a = input('a')
