@@ -1,4 +1,4 @@
-import passwd
+import gui
 import face
 from unlock import unlock_door
 
