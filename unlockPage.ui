@@ -14,48 +14,28 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pwdButton">
+   <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>220</x>
-      <y>330</y>
-      <width>321</width>
-      <height>111</height>
+      <x>180</x>
+      <y>170</y>
+      <width>461</width>
+      <height>161</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>萝莉体</family>
-      <pointsize>36</pointsize>
+      <pointsize>28</pointsize>
      </font>
     </property>
     <property name="text">
-     <string>密码解锁</string>
+     <string>成功解锁，请在五秒内进入</string>
     </property>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>pwdButton</sender>
-   <signal>pressed()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>pwdPressed()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>421</x>
-     <y>366</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>645</x>
-     <y>374</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
- <slots>
-  <slot>pwdPressed()</slot>
- </slots>
+ <connections/>
 </ui>
