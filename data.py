@@ -1,4 +1,3 @@
-import pygame
 
 # monitor width and height
 WIDTH, HEIGHT = 800, 480

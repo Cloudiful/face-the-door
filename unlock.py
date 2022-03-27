@@ -1,8 +1,6 @@
 import RPi.GPIO as GPIO
 import time
 
-import data
-
 
 def unlock_door():
 
