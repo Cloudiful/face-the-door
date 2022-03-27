@@ -1,4 +1,6 @@
 from PySide2.QtWidgets import QApplication, QMainWindow, QDialog
+
+from face import capture
 from indexui import Ui_MainWindow
 from pwdui import Ui_Dialog as Ui_PwdWindow
 from unlockui import Ui_Dialog as Ui_UnlockWindow
@@ -33,8 +35,9 @@ class UnlockWindows(QDialog):
         self.ui.setupUi(self)
 
 
-app = QApplication()
-windows = MainWindows()
-windows.showFullScreen()
+def init():
+    app = QApplication()
+    windows = MainWindows()
+    windows.showFullScreen()
 
-app.exec_()
+    app.exec_()

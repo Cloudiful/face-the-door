@@ -1,14 +1,13 @@
 import gui
 import face
-from unlock import unlock_door
+import threading
 
 if __name__ == "__main__":
 
-    result = face.recognition()
+    tGUI = threading.Thread(target=gui.init,args=())
+    tFace = threading.Thread(target=face.capture,args=())
 
-    if result == "success":
-        unlock_door()
-    elif result == "error":
-        print("FAILED TO UNLOCK!")
+    tGUI.start()
+    tFace.start()
 
-    a = input("按回车键退出程序...")
+    input('a')
