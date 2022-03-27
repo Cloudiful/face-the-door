@@ -21,6 +21,7 @@ def capture():
     detected = 0
     faceCascade = cv.CascadeClassifier('/usr/local/lib/python3.9/dist-packages/cv2/data'
                                        '/haarcascade_frontalface_default.xml')
+
     while True:
         frame += 1
         ret, img = cap.read()
