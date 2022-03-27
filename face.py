@@ -19,8 +19,7 @@ def capture():
     print("开始检测人脸")
     frame = 0
     detected = 0
-    faceCascade = cv.CascadeClassifier('/usr/local/lib/python3.9/dist-packages/cv2/data'
-                                       '/haarcascade_frontalface_default.xml')
+
     while True:
         frame += 1
         ret, img = cap.read()
