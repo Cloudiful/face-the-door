@@ -13,6 +13,7 @@ cameraFeedX = 0
 cameraFeedY = 0
 
 pwd = ''
+method = 'face'
 # # string list for text file
 # TXT = []
 # FONTSIZE = 32
