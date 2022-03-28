@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 import time
 
 
-def unlock_door():
+def unlock():
 
     servoPIN = 17
     GPIO.setmode(GPIO.BCM)
