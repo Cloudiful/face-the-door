@@ -33,7 +33,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.pwdButton.pressed.connect(MainWindow.pwdPressed)
+        self.pwdButton.released.connect(MainWindow.pwdPressed)
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi

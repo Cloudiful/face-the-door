@@ -6,26 +6,29 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>240</height>
+    <width>800</width>
+    <height>480</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Unlock</string>
+  </property>
+  <property name="windowOpacity">
+   <double>1.000000000000000</double>
   </property>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>130</y>
-     <width>341</width>
-     <height>71</height>
+     <x>170</x>
+     <y>170</y>
+     <width>471</width>
+     <height>131</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <family>萝莉体</family>
-     <pointsize>20</pointsize>
+     <pointsize>28</pointsize>
     </font>
    </property>
    <property name="text">
