@@ -13,7 +13,7 @@ def unlock_door():
     time.sleep(1)
 
     p.ChangeDutyCycle(2.5)  # 顺时针旋转90度
-    # print("已解锁房门。")
+    print("已解锁房门。")
 
     time.sleep(5)
 
