@@ -40,7 +40,7 @@
  <connections>
   <connection>
    <sender>pwdButton</sender>
-   <signal>pressed()</signal>
+   <signal>released()</signal>
    <receiver>MainWindow</receiver>
    <slot>pwdPressed()</slot>
    <hints>
