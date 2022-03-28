@@ -50,9 +50,13 @@ def capture():
             cv.imwrite(os.path.join('./images/', 'detected face ' + str(detected) + '.jpg'), img)
 
         if detected >= 5:  # 捕获到五张人脸图片或按ESC键时退出
+            cap.release()
             break
 
-    cap.release()
+        if data.method != 'face':  # 如果系统不采用人脸识别方式了
+            cap.release()
+            return 'pwd'
+
     print("人脸检测完毕，已保存5张图片待处理。")
 
 
@@ -80,16 +84,16 @@ def baidu_api():
             print("验证失败: " + result_who['error_msg'])
 
         # 获取活体验证结果
-        result_liveness = client.faceverify([
-            {
-                'image': str(image, 'utf-8'),
-                'image_type': 'BASE64',
-            }
-        ])
-        if result_liveness['error_msg'] == 'SUCCESS':
-            liveness[n] = result_liveness['result']['face_liveness']  # 获取活体值
-        else:
-            print("活体验证失败: " + result_liveness['error_msg'])
+        # result_liveness = client.faceverify([
+        #     {
+        #         'image': str(image, 'utf-8'),
+        #         'image_type': 'BASE64',
+        #     }
+        # ])
+        # if result_liveness['error_msg'] == 'SUCCESS':
+        #     liveness[n] = result_liveness['result']['face_liveness']  # 获取活体值
+        # else:
+        #     print("活体验证失败: " + result_liveness['error_msg'])
 
         sleep(0.2)  # 防止QPS超过免费限制造成Timeout的情况
 
@@ -132,7 +136,6 @@ def recognition():
         if fail >= 3:
             print("尝试次数过多，系统暂时锁定......")
             return "error"
-
     # 设备脱机
     else:
         print("当前未连接互联网......")
