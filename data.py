@@ -12,6 +12,7 @@ cameraFeedHeight = 480
 cameraFeedX = 0
 cameraFeedY = 0
 
+pwd = ''
 # # string list for text file
 # TXT = []
 # FONTSIZE = 32
