@@ -1,17 +1,24 @@
-import pwdui
+import threading
+
+import numpy as np
+from PySide2.QtCore import QTimer
+from PySide2.QtGui import QImage, QPixmap
+from PySide2.QtWidgets import QApplication, QMainWindow, QDialog
+
+import data
 import face
 import servo
-import threading
-from PySide2.QtWidgets import QApplication, QMainWindow, QDialog
-import data
+from failedfaceui import Ui_Dialog as Ui_FailedFaceWindow
+from failedui import Ui_Dialog as Ui_FailedWindow
 from indexui import Ui_MainWindow
+from loadingui import Ui_Dialog as Ui_LoadingWindow
 from pwdui import Ui_Dialog as Ui_PwdWindow
 from unlockui import Ui_Dialog as Ui_UnlockWindow
-from failedui import Ui_Dialog as Ui_FailedWindows
 
 
 def callFaceProcess():
-    if data.method == 'face':
+    face.network()
+    if data.method == 'capture' and data.online:
         tFace = threading.Thread(target=face.capture, args=())
         tFace.start()
 
@@ -21,43 +28,84 @@ class MainWindows(QMainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.pwdPage = None
+        self.pwdPage = PwdWindow()
+        self.loadingPage = LoadingWindows()
+        self.unlockPage = UnlockWindows()
+        self.failedPage = FailedWindows()
+        self.failedFacePage = FailedFaceWindows()
+
         callFaceProcess()
+
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.update_camera_feed)
+        self.timer.start(40)
 
     def pwdPressed(self):
         data.method = 'pwd'
         print('Goto password input page')
         data.pwd = ''
-        self.pwdPage = PwdWindow()
         self.pwdPage.showFullScreen()
+
+    def update_camera_feed(self):
+        if data.online:
+            self.ui.cameraFeed.setPixmap(QPixmap.fromImage("images/waiting.jpg"))
+
+            if type(data.cameraFeed) == np.ndarray and data.method == 'capture':
+                image = QImage(data.cameraFeed, data.cameraFeed.shape[1], data.cameraFeed.shape[0],
+                               data.cameraFeed.strides[0], QImage.Format_BGR888)
+                image.scaled(640, 480)
+                self.ui.cameraFeed.setPixmap(QPixmap.fromImage(image))
+            elif data.method == 'baidu':
+                self.timer.stop()
+                result = face.baidu_api()
+
+                print(result)
+
+                if result != 'error':
+                    self.unlockPage.showFullScreen()
+                    unlockThread = threading.Thread(target=servo.unlock, args=())
+                    unlockThread.start()
+                    QTimer.singleShot(7000, lambda: self.unlockPage.close())
+                    QTimer.singleShot(7000, lambda: callFaceProcess())
+                    data.method = 'capture'
+                else:
+                    self.failedFacePage.showFullScreen()
+                    QTimer.singleShot(3000, lambda: self.failedFacePage.close())
+                    QTimer.singleShot(3000, lambda: callFaceProcess())
+                    data.method = 'capture'
+
+                self.timer.start(40)
+                self.loadingPage.close()
+
+        else:
+            self.ui.cameraFeed.setPixmap(QPixmap.fromImage("images/offline.jpg"))
 
 
 class PwdWindow(QDialog):
     def __init__(self):
         super(PwdWindow, self).__init__()
-        self.failedPage = None
-        self.unlockPage = None
+        self.failedPage = FailedWindows()
+        self.unlockPage = UnlockWindows()
         self.ui = Ui_PwdWindow()
         self.ui.setupUi(self)
 
     def passwordInput(self, i):
         if type(i) == int and len(data.pwd) < 6:
             data.pwd += str(i)
-        elif i == 'yes':
+            if len(data.pwd) == 6:
+                i = 'yes'
+        if i == 'yes' and len(data.pwd) > 0:
             if data.pwd == '123456':
-                self.unlockPage = UnlockWindows()
                 self.unlockPage.showFullScreen()
                 data.pwd = ''
                 unlockThread = threading.Thread(target=servo.unlock, args=())
                 unlockThread.start()
-                pwdui.QTimer.singleShot(7000, lambda: self.unlockPage.close())
-
-                data.method = 'face'
-                callFaceProcess()
+                QTimer.singleShot(7000, lambda: self.unlockPage.close())
+                QTimer.singleShot(7000, lambda: callFaceProcess())
+                data.method = 'capture'
                 self.close()
 
             else:
-                self.failedPage = FailedWindows()
                 self.failedPage.showFullScreen()
                 data.pwd = ''
 
@@ -67,7 +115,7 @@ class PwdWindow(QDialog):
         self.ui.textEdit.setText(data.pwd)
 
     def backfrompwd(self):
-        data.method = 'face'
+        data.method = 'capture'
         callFaceProcess()
         self.close()
 
@@ -118,7 +166,21 @@ class UnlockWindows(QDialog):
 class FailedWindows(QDialog):
     def __init__(self):
         super(FailedWindows, self).__init__()
-        self.ui = Ui_FailedWindows()
+        self.ui = Ui_FailedWindow()
+        self.ui.setupUi(self)
+
+
+class LoadingWindows(QDialog):
+    def __init__(self):
+        super(LoadingWindows, self).__init__()
+        self.ui = Ui_LoadingWindow()
+        self.ui.setupUi(self)
+
+
+class FailedFaceWindows(QDialog):
+    def __init__(self):
+        super(FailedFaceWindows, self).__init__()
+        self.ui = Ui_FailedFaceWindow()
         self.ui.setupUi(self)
 
 
