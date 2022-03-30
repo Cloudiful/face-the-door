@@ -10,31 +10,111 @@
     <height>480</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <underline>false</underline>
+    <strikeout>false</strikeout>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="pwdButton">
     <property name="geometry">
      <rect>
-      <x>220</x>
-      <y>330</y>
-      <width>321</width>
-      <height>111</height>
+      <x>640</x>
+      <y>50</y>
+      <width>161</width>
+      <height>431</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="font">
+     <font>
+      <family>萝莉体</family>
+      <pointsize>42</pointsize>
+      <stylestrategy>PreferDefault</stylestrategy>
+      <kerning>true</kerning>
+     </font>
+    </property>
+    <property name="acceptDrops">
+     <bool>false</bool>
+    </property>
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
+    <property name="text">
+     <string>密
+码
+解
+锁</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+    <property name="autoRepeatInterval">
+     <number>0</number>
+    </property>
+    <property name="autoDefault">
+     <bool>false</bool>
+    </property>
+    <property name="default">
+     <bool>false</bool>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="cameraFeed">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>640</width>
+      <height>480</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Microsoft YaHei</family>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>10</y>
+      <width>111</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>萝莉体</family>
-      <pointsize>36</pointsize>
+      <pointsize>16</pointsize>
      </font>
     </property>
     <property name="text">
-     <string>密码解锁</string>
+     <string>或 者 使 用</string>
     </property>
    </widget>
+   <zorder>cameraFeed</zorder>
+   <zorder>pwdButton</zorder>
+   <zorder>label</zorder>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections>
@@ -45,8 +125,8 @@
    <slot>pwdPressed()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>421</x>
-     <y>366</y>
+     <x>780</x>
+     <y>156</y>
     </hint>
     <hint type="destinationlabel">
      <x>645</x>

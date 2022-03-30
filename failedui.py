@@ -18,21 +18,19 @@ class Ui_Dialog(object):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
         Dialog.resize(800, 480)
-        Dialog.setWindowOpacity(1.000000000000000)
-        self.label = QLabel(Dialog)
-        self.label.setObjectName(u"label")
-        self.label.setGeometry(QRect(310, 150, 151, 51))
+        Dialog.setWindowOpacity(0.900000000000000)
+        Dialog.setAutoFillBackground(True)
+        self.text = QLabel(Dialog)
+        self.text.setObjectName(u"text")
+        self.text.setGeometry(QRect(260, 80, 261, 111))
         font = QFont()
         font.setFamily(u"\u841d\u8389\u4f53")
-        font.setPointSize(28)
-        self.label.setFont(font)
+        font.setPointSize(48)
+        self.text.setFont(font)
         self.pushButton = QPushButton(Dialog)
         self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setGeometry(QRect(250, 300, 271, 131))
-        font1 = QFont()
-        font1.setFamily(u"\u841d\u8389\u4f53")
-        font1.setPointSize(26)
-        self.pushButton.setFont(font1)
+        self.pushButton.setGeometry(QRect(220, 240, 341, 151))
+        self.pushButton.setFont(font)
 
         self.retranslateUi(Dialog)
         self.pushButton.released.connect(Dialog.close)
@@ -42,7 +40,7 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Failed", None))
-        self.label.setText(QCoreApplication.translate("Dialog", u"\u5bc6\u7801\u9519\u8bef\uff01", None))
+        self.text.setText(QCoreApplication.translate("Dialog", u"\u9a8c\u8bc1\u5931\u8d25", None))
         self.pushButton.setText(QCoreApplication.translate("Dialog", u"\u91cd\u8bd5", None))
     # retranslateUi
 
