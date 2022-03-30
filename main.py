@@ -1,7 +1,6 @@
-import gui
+from gui import init
 
 if __name__ == "__main__":
-
-    gui.init()
+    init()
 
     a = input('a')
