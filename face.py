@@ -1,19 +1,20 @@
-# coding=utf8
 import base64
-import requests
 import os.path
-import numpy as np
-import cv2 as cv
-from aip import AipFace
 from time import sleep
+
+import cv2 as cv
+import numpy as np
+import requests
+from aip import AipFace
+
 import data
 
 
 # 开始检测人脸，每10帧检测一次，检测到5张人脸后返回主程序，并保存人脸图像至image文件夹下.
 def capture():
     cap = cv.VideoCapture(0)
-    cap.set(cv.CAP_PROP_FRAME_WIDTH, 320)  # set Width
-    cap.set(cv.CAP_PROP_FRAME_HEIGHT, 240)  # set Height
+    cap.set(cv.CAP_PROP_FRAME_WIDTH, 640)  # set Width
+    cap.set(cv.CAP_PROP_FRAME_HEIGHT, 480)  # set Height
     cap.set(cv.CAP_PROP_FPS, 25)
 
     print("开始检测人脸")
@@ -22,42 +23,55 @@ def capture():
     faceCascade = cv.CascadeClassifier('/usr/local/lib/python3.9/dist-packages/cv2/data'
                                        '/haarcascade_frontalface_default.xml')
 
+    showRect = False
     while True:
         frame += 1
+        if frame == 50:
+            frame = 0
+            showRect = False
+
         ret, img = cap.read()
         img = cv.flip(img, 0)
 
         if frame % 10 == 0:  # every 10 frames
+
             gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+
             faces = faceCascade.detectMultiScale(
                 gray,
                 scaleFactor=1.2,
                 minNeighbors=5,
-                minSize=(20, 20)
+                minSize=(240, 240)
             )
             # print(faces)
             for (x, y, w, h) in faces:
-                cv.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
+                showRect = True
+                data.faceRec = [x, y, w, h]
+                # cv.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
                 roi_gray = gray[y:y + h, x:x + w]
                 roi_color = img[y:y + h, x:x + w]
                 detected += 1
                 print("已捕获" + str(detected) + "张人脸图像")
 
+        if showRect:
+            cv.rectangle(img, (data.faceRec[0], data.faceRec[1]),
+                         (data.faceRec[0] + data.faceRec[2], data.faceRec[1] + data.faceRec[3]), (255, 255, 255), 2)
+
         # cv.imshow('video', img)
-        data.cameraFeed = img  # send img into cameraFeed for pygame
+        data.cameraFeed = cv.cvtColor(img, cv.COLOR_BGR2RGB)  # send img into ram
 
         if detected != 0:  # 捕获到人脸后将其保存至images文件夹中
             cv.imwrite(os.path.join('./images/', 'detected face ' + str(detected) + '.jpg'), img)
-
         if detected >= 5:  # 捕获到五张人脸图片或按ESC键时退出
             cap.release()
             break
 
-        if data.method != 'face':  # 如果系统不采用人脸识别方式了
+        if data.method != 'capture':  # 如果系统不在捕捉中
             cap.release()
             return 'pwd'
 
     print("人脸检测完毕，已保存5张图片待处理。")
+    data.method = 'baidu'
 
 
 # 调用百度云API，对之前保存的人脸图像进行比对，并输出结果
@@ -95,7 +109,7 @@ def baidu_api():
         # else:
         #     print("活体验证失败: " + result_liveness['error_msg'])
 
-        sleep(0.2)  # 防止QPS超过免费限制造成Timeout的情况
+        sleep(0.7)  # 防止QPS超过免费限制造成Timeout的情况
 
     name_result = name[0]
     for i in range(0, 5):
@@ -107,12 +121,14 @@ def baidu_api():
 
 
 # test if device is online
-def test_network():
+def network():
     try:
         html = requests.get("https://www.baidu.com", timeout=1)
         print(html.text)
     except:
+        data.online = False
         return False
+    data.online = True
     return True
 
 
@@ -120,7 +136,7 @@ def recognition():
     fail = 0
 
     # 如果设备已联网，则使用百度API进行人脸比对
-    if test_network():
+    if network():
         print("已联网，将使用百度API。")
         while fail < 3:
             # 调用Opencv进行人脸检测
