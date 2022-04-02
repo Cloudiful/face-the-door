@@ -2,9 +2,10 @@ import time
 
 import RPi.GPIO as GPIO
 
+import database
+
 
 def unlock():
-
     servoPIN = 17
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(servoPIN, GPIO.OUT)
@@ -15,6 +16,7 @@ def unlock():
 
     p.ChangeDutyCycle(2.5)  # 顺时针旋转90度
     print("已解锁房门。")
+    database.updateResult("status", 1, 1)
 
     time.sleep(5)
 

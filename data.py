@@ -1,4 +1,3 @@
-
 # monitor width and height
 WIDTH, HEIGHT = 800, 480
 
@@ -16,6 +15,8 @@ pwd = ''
 method = 'capture'
 
 online = False
+
+faceRec = [0, 0, 0, 0]
 # # string list for text file
 # TXT = []
 # FONTSIZE = 32

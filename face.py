@@ -9,8 +9,10 @@ from aip import AipFace
 
 import data
 
-
 # 开始检测人脸，每10帧检测一次，检测到5张人脸后返回主程序，并保存人脸图像至image文件夹下.
+import database
+
+
 def capture():
     cap = cv.VideoCapture(0)
     cap.set(cv.CAP_PROP_FRAME_WIDTH, 640)  # set Width
@@ -41,7 +43,7 @@ def capture():
                 gray,
                 scaleFactor=1.2,
                 minNeighbors=5,
-                minSize=(240, 240)
+                minSize=(200, 200)
             )
             # print(faces)
             for (x, y, w, h) in faces:
@@ -124,6 +126,7 @@ def baidu_api():
 def network():
     try:
         html = requests.get("https://www.baidu.com", timeout=1)
+        database.updateOnline("status", 1, 1)
         print(html.text)
     except:
         data.online = False

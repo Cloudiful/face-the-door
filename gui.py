@@ -6,6 +6,7 @@ from PySide2.QtGui import QImage, QPixmap
 from PySide2.QtWidgets import QApplication, QMainWindow, QDialog
 
 import data
+import database
 import face
 import servo
 from failedfaceui import Ui_Dialog as Ui_FailedFaceWindow
@@ -19,6 +20,7 @@ from unlockui import Ui_Dialog as Ui_UnlockWindow
 def callFaceProcess():
     face.network()
     if data.method == 'capture' and data.online:
+        database.updateCommand("status", 1, "none")
         tFace = threading.Thread(target=face.capture, args=())
         tFace.start()
 
@@ -39,6 +41,10 @@ class MainWindows(QMainWindow):
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_camera_feed)
         self.timer.start(40)
+
+        self.timer2 = QTimer()
+        self.timer2.timeout.connect(self.check_remote_command)
+        self.timer2.start(3000)
 
     def pwdPressed(self):
         data.method = 'pwd'
@@ -76,9 +82,26 @@ class MainWindows(QMainWindow):
 
                 self.timer.start(40)
                 self.loadingPage.close()
+            elif data.method == 'unlock':
+                self.timer2.stop()
+                database.updateCommand("status", 1, "none")
+                self.unlockPage.showFullScreen()
+                unlockThread = threading.Thread(target=servo.unlock, args=())
+                unlockThread.start()
+                QTimer.singleShot(7000, lambda: self.unlockPage.close())
+                QTimer.singleShot(7000, lambda: callFaceProcess())
+                data.method = 'capture'
+                self.timer2.start(5000)
+                self.loadingPage.close()
 
         else:
             self.ui.cameraFeed.setPixmap(QPixmap.fromImage("images/offline.jpg"))
+
+    def check_remote_command(self):
+        command = database.fetch_all("status")[1][3]
+        print(command)
+        if command == "unlock":
+            data.method = 'unlock'
 
 
 class PwdWindow(QDialog):
