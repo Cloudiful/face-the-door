@@ -91,7 +91,7 @@
 <p class="describe">一个远程查看与管理个人智能终端的地方</p>
 
 <?php
-$servername = "your server name";
+$servername = "your server name.com or ip";
 $username = "your username";
 $password = "your password";
 $port = "your port";
