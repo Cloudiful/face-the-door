@@ -1,11 +1,11 @@
 import mysql.connector
 
 mydb = mysql.connector.connect(
-    host="sh-cynosdbmysql-grp-dhfshspi.sql.tencentcdb.com",
-    port=24839,
-    user="cloudiful",
-    password="T7:5CWr.jrFK-kj",
-    database="raspberry"
+    host="your servername",
+    port=your port,
+    user="your username",
+    password="your password",
+    database="your database"
 )
 
 cursor = mydb.cursor()
